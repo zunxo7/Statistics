@@ -1,0 +1,346 @@
+<!doctype html>
+<html>
+<head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jstat/1.7.1/jstat.min.js"></script>
+<meta charset="utf-8">
+<title>Project</title>
+</head>
+
+<body>
+	<style>
+		body{background-color: #FEFBF6;font-family: Arial;zoom:190%}
+		select{background-color: #FEFBF6; border: none;font-size: 14px;border-radius: 6px}
+		h1,h3{color: #B67352}
+		input[type="text"]{width: 50px;border-radius: 7px;background-color:#FEFBF6}
+		input[type="number"]::-webkit-inner-spin-button,input[type="number"]::-webkit-outer-spin-button {display: none}
+		input[type="number"]{width: 50px;border-radius: 7px;background-color:#FEFBF6}
+		button{border-radius: 7px;background-color:#FEFBF6;font-size: 14px}
+		.hwrapper{display: flex; justify-content: flex-start}
+		.hcontainer{display: flex; flex-direction: row; justify-content: center;gap: 12px;border-radius: 15px;background-color: #fff0e6;width: 424px}
+		.dwrapper{border-radius: 15px;background-color: #fff0e6;width: 285px;height: auto}
+		.dcontainer{display: flex;flex-direction: column;padding-left: 10px;}
+		.dtitlearea{display: grid;grid-template-rows: 35px 33px;justify-content: flex-start;}
+		.dworkspace{display: flex;flex-direction: column;gap:7px;padding-bottom: 15px}
+		.ditem{font-size: 14px}
+	</style>
+	<!--Header Area-->
+	<div class="hwrapper"><div class="hcontainer"><h1>Statistics Project</h1><p style="align-self: flex-end;font-size: 14px"><u>Made By Zunnoon</u></p></div></div>
+	<br>
+	<!--Solving Area-->
+	<div style="display: flex;flex-direction: row;gap:10px">
+	<div class="dwrapper">
+	<div class="dcontainer" style="height:100%">
+	<div class="dtitlearea"><div style="align-self:center;padding-top: 5px"><h3>Normal Sampling Distribution</h3></div>
+	<div style="font-family: Arial;font-size: 14px">Solve for <select id="solver" onChange="drpchange()">
+	<option>Population Mean (μ)</option>	
+	<option>Population Variance (σ²)</option>
+	<option>Confidence Interval</option>
+	<option>Confidence Level</option>
+	<option>P(X&lt;x)</option>
+	<option>P(X&gt;x)</option>
+	</select></div>
+	</div>
+	<div class="dworkspace" id="sumpopm" style="display: flex">
+	<div class="ditem">Summation of x (∑x): <input id="sumx" type="number" ></div>
+	<div class="ditem">Sample Size (n): <input id="ssn" type="number" ></div>
+	<div class="ditem" style="font-size: 12px;text-decoration: underline;cursor: pointer" onClick="linkchange()">Use values of x?</div>
+	</div>
+	<div class="dworkspace" id="sumpopv" style="display: none">
+	<div class="ditem">Summation of x² (∑x²): <input id="sumxsqr" type="number" ></div>
+	<div class="ditem">Summation of x (∑x): <input id="sumxs" type="number" ></div>
+	<div class="ditem">Sample Size (n): <input id="sssn" type="number" ></div>
+	<div class="ditem" style="font-size: 12px;text-decoration: underline;cursor: pointer" onClick="linkchange()">Use values of x?</div>
+	</div>
+	<div class="dworkspace" id="pxlesx" style="display: none">
+	<div class="ditem" id="xvalitem">Value of x:&nbsp;<input id="valx" type="number"></div>
+	<div class="ditem">Population Mean (μ):&nbsp;<input id="pm" type="number"></div>
+	<div class="ditem"><info id="pvt">Population Variance (σ²): </info> <input id="pv" type="number"> <info style="text-decoration:underline;font-size: 12px;cursor: pointer;padding-left:7px" onClick="pvtch(pvt,pvtsub)" id="pvtsub">Use σ</info></div>
+	<div class="ditem">Sample Size (n): <input id="ss" type="number"></div>
+	</div>
+	<div class="dworkspace" id="confi" style="display: none">
+	<div class="ditem">Confidence Level (%):&nbsp;<input id="valcl" type="number"></div>
+	<div class="ditem" style="display: flex" id="pmm">Population Mean (μ):&nbsp;<input id="pmc" type="number"></div>
+	<div class="ditem"><info id="pvtc">Population Variance (σ²): </info> <input id="pvc" type="number"> <info style="text-decoration:underline;font-size: 12px;cursor: pointer;padding-left:7px" onClick="pvtch(pvtc,pvtsubc)" id="pvtsubc">Use σ</info></div>
+	<div class="ditem">Sample Size (n): <input id="ssc" type="number"></div>
+	<div class="ditem" onClick="cflch()" id="wilink" style="font-size: 12px;text-decoration: underline;cursor: pointer;">Calculate width of interval?</div>	
+	</div>
+	<div class="dworkspace" id="conflvl" style="display: none">
+	<div class="ditem" style="display: flex" id="conflvls">Confidence Interval:&nbsp;<input id="lwl" type="number">&lt;μ&lt;<input id="upl" type="number"></div>
+	<div class="ditem" id="widths" style="display: none">Width Of Interval:&nbsp;<input id="wdi" type="number"></div>
+	<div class="ditem">Population Mean (μ):&nbsp;<input id="pml" type="number"></div>
+	<div class="ditem"><info id="pvtl">Population Variance (σ²): </info> <input id="pvl" type="number"> <info style="text-decoration:underline;font-size: 12px;cursor: pointer;padding-left:7px" onClick="pvtch(pvtl,pvtsubl)" id="pvtsubl">Use σ</info></div>
+	<div class="ditem">Sample Size (n): <input id="ssl" type="number"></div>
+	<div class="ditem" onClick="cflchi()" id="wiilink" style="font-size: 12px;text-decoration: underline;cursor: pointer;">Use width of interval?</div>
+	</div>
+	<div class="dworkspace" id="valpopmv" style="display: none">
+	<div class="ditem">Values of x: <input  id="valsx" type="text" style="width:150px" placeholder="x₁, x₂, x₃, x₄..."></div>
+	<div class="ditem" id="xlink" style="font-size: 12px;text-decoration: underline;cursor: pointer" onClick="linkchange()">Use ∑x and n instead?</div>
+	</div>
+	</div>
+	</div>
+	<div id="tips" style="border-radius: 15px;background-color: #fff0e6;display: none;padding-right: 20px;height:auto">
+	<div style="position: relative;bottom: 9px;left: 10px"><h3 style="text-decoration: underline" id="tiptitle"></h3></div>
+	<div style="position: relative;left: 10px;bottom:20px" id="tipsub"></div>
+	</div>
+	</div>
+	<!--Buttons Area-->
+	<div class="dwrapper" style="align-items: center;display: flex;justify-content:flex-start;flex-direction: row;margin-top: 12px;gap:10px;background-color:transparent">
+		<div style="margin-left: 5px" onClick="solveit()"><button>Solve</button></div>
+		<div><button onClick="clearit()">Clear</button></div>
+	</div>
+	<script>
+	//To Globally Store Mean & Variance
+	var mean = 0
+	var variance = 0
+	
+	//Function To Create A 'Tip'
+	function createtip(title,text,height){
+		tiptitle.innerHTML = title
+		tipsub.innerHTML = text
+		tips.style.height = height + "px"
+		tips.style.display = "inline"
+	}
+		
+	//Function To Hide All `Workspaces` Except `Exception`
+	function hidework(exception){
+		var workspaces = document.querySelectorAll(".dworkspace")
+		workspaces.forEach(function(workspace) {
+        workspace.style.display = "none";
+    })
+		tips.style.display = "none"
+		exception.style.display = "flex"
+	}
+	
+	function solveit(){
+		
+		//Mean
+		if(solver[0].selected){
+		if(sumx.value!="" && ssn.value!=""|| valsx.value!=""){
+			if(sumpopm.style.display=="flex"){
+			mean = ((sumx.value)/(ssn.value)).toFixed(5)
+			var mean3sf = (parseFloat(mean)).toPrecision(3)
+			pm.value = mean
+			pmc.value = mean
+			createtip("Answer:",mean3sf,72)
+		}else if(sumpopm.style.display!="flex"){
+			var valsxarray = (valsx.value).split(",")
+			var sum = 0
+			for(i=0;i<valsxarray.length;i++){
+				sum += parseFloat(valsxarray[i])
+			}
+			mean = (sum/valsxarray.length).toFixed(5)
+			var mean3sf = (parseFloat(mean)).toPrecision(3)
+			pm.value = mean
+			pmc.value = mean
+			createtip("Answer:","Summation of x (∑x): "+sum.toPrecision(3)+"<br> Sample Size (n): "+valsxarray.length+"<br>"+mean3sf,104)
+			}
+		}else{createtip("Error:","Enter Values",72)}}
+		
+		//Variance
+		if(solver[1].selected){
+		if(sssn.value!="" && sumxsqr.value!="" && sumxs.value!=""||valsx.value!=""){
+			if(sumpopv.style.display=="flex"){
+			variance = ((1/(sssn.value-1))*(sumxsqr.value-((Math.pow(sumxs.value,2))/sssn.value))).toFixed(5)
+			var variance3sf = (parseFloat(variance)).toPrecision(3)
+			createtip("Answer:",variance3sf + " (s² ≈ σ²)",70)
+			pv.value = variance
+			pvc.value = variance
+		}else if(sumpopv.style.display!="flex"){
+			var valsxarray = (valsx.value).split(",")
+			var sum = 0
+			var sumsqr = 0
+			var n = valsxarray.length
+			for(i=0;i<n;i++){
+				sum += parseFloat(valsxarray[i])
+				sumsqr += Math.pow(parseFloat(valsxarray[i]),2)
+			}
+			variance = ((1/(n-1))*(sumsqr-((Math.pow(sum,2))/n))).toFixed(5)
+			var variance3sf = (parseFloat(variance)).toPrecision(3)
+			createtip("Answer:","Summation of x² (∑x²): "+sumsqr+"<br> Summation of x (∑x): "+sum+"<br> Sample Size (n): "+valsxarray.length+"<br>" +variance3sf + " (s² ≈ σ²)",123)
+			pv.value = variance
+			pvc.value = variance
+			}
+		}else{createtip("Error:","Enter Values",72)}}
+		
+		//Confidence Interval & Width	
+		if(solver[2].selected){
+			if(ssc.value!="" &&valcl.value!=""&&pvc.value!=""){
+				var calcv = (pvtc.innerHTML == "Population Variance (σ²): ") ? pvc.value : Math.pow(pvc.value, 2)
+				var cfp = (100+parseFloat(valcl.value))/200
+				var zscore = (jStat.normal.inv(cfp, 0, 1)).toFixed(3)
+				var sm =  zscore*Math.sqrt(calcv/ssc.value)
+				var UL = parseFloat(pmc.value) + sm
+				var LL = pmc.value - sm
+				var width = 2*sm
+				if(pmm.style.display=="flex"){
+					if(wilink.innerHTML=="Calculate width of interval?"){
+					if(pmc.value==""){
+						createtip("Error:","Enter Values",72)
+					}else{
+						createtip(
+						"Answer:",
+						"P(Z&ltz)="+cfp+
+						"<br> z="+zscore+"<br>"+
+						LL.toPrecision(3)+"<μ<"+UL.toPrecision(3)+"<br>"
+						,105)
+					}
+				}
+				}else{
+					if(wilink.innerHTML=="Calculate confidence interval?"){
+						createtip("Answer:","Width: "+width.toPrecision(3),72)
+					}
+				}
+				}else{createtip("Error:","Enter Values",72)}}
+
+
+		//Confidence Level With Width
+		if(solver[3].selected){
+			if(ssl.value!=""&&pml.value!=""&&pvl.value!=""){
+				var calcv = (pvtl.innerHTML == "Population Variance (σ²): ") ? pvl.value : Math.pow(pvl.value, 2)
+				var zscore = (conflvls.style.display=="flex") ? ((upl.value-pml.value)*Math.sqrt(ssl.value))/Math.sqrt(pvl.value) : ((wdi.value*0.5)*Math.sqrt(ssl.value))/Math.sqrt(pvl.value)
+				var probability = jStat.normal.cdf(parseFloat(zscore.toFixed(3)), 0, 1)
+				var cfp = (probability*200)-100
+				
+				if(conflvls.style.display=="flex"){
+					if(wiilink.innerHTML=="Use width of interval?"){
+					if(lwl.value==""||upl.value==""){
+						createtip("Error:","Enter Values",72)
+					}else{
+						createtip(
+						"Answer:",
+						"z="+zscore.toFixed(3)+"<br>"+
+						"P(Z&lt"+zscore.toFixed(3)+")="+probability.toFixed(4)+"<br>"+
+						"Confidence Level="+cfp.toPrecision(3)+"%"
+						,105)
+					}
+				}
+				}else{
+					if(wiilink.innerHTML=="Use confidence interval?"){
+						if(wdi.value==""){
+							createtip("Error:","Enter Values",72)
+						}else{
+							createtip(
+							"Answer:",
+							"z="+zscore.toFixed(3)+"<br>"+
+							"P(Z&lt"+zscore.toFixed(3)+")="+probability.toFixed(4)+"<br>"+
+							"Confidence Level="+cfp.toPrecision(3)+"%"
+							,105)
+						}
+					}
+				}
+				}else{createtip("Error:","Enter Values",72)}}
+		
+		//P(X<x) & P(X>x)
+		if(solver[4].selected || solver[5].selected){
+			if(ss.value!="" &&valx.value!=""&&pm.value!=""&&pv.value!=""){
+			var calcv = (pvt.innerHTML == "Population Variance (σ²): ") ? pv.value : Math.pow(pv.value, 2)
+			var zscore = ((valx.value - pm.value)/ Math.sqrt(calcv/ss.value)).toFixed(3)
+			var probability =  jStat.normal.cdf(valx.value, pm.value, Math.sqrt(calcv/ss.value))
+			if(solver[2].selected){
+					createtip("Answer:","P(X<"+valx.value+") <br>"+"P(Z<"+zscore+") <br>"+"= "+probability.toFixed(4)+"<br>"+"= "+probability.toPrecision(3),122)
+				}
+			if(solver[3].selected){
+					createtip(
+					"Answer:",
+					"P(X>"+valx.value+") <br>"+
+					"P(Z>"+zscore+") <br>"+
+					"= "+"1-P(Z<"+zscore+") <br>"+
+					"= 1-"+probability.toFixed(4)+"<br>"+
+					"= "+(1-probability).toFixed(4)+"<br>"+
+					"= "+(1-probability).toPrecision(3)
+					,160)
+				}
+			}else{createtip("Error:","Enter Values",72)}}
+		}
+		
+	//Function To Clear Data
+	function clearit(){
+		var NumberInputs = document.querySelectorAll('input[type="number"]')
+		var oneSelected = false
+		if(valsx.value!=""){
+			oneSelected = true
+		}
+		NumberInputs.forEach(function(input) {
+        	if (input.value != "") { 
+            oneSelected = true;
+			input.value=""
+        	}})
+		if(oneSelected){
+			createtip('Information:','Data Cleared',72)
+			valsx.value=""
+		}else{
+			createtip('Error:','Cannot Clear',72)
+		}
+	}
+		
+	//Function To Control Dropdown
+	function drpchange(){
+		if(solver[0].selected){
+			hidework(sumpopm)
+		}else if(solver[1].selected){
+			hidework(sumpopv)}
+		else if(solver[2].selected){
+			hidework(confi)
+		}else if(solver[3].selected){
+			hidework(conflvl)
+		}else if(solver[4].selected||solver[5].selected){
+			hidework(pxlesx)
+		}
+	}
+	
+	//Function To Change From 'Values of X & ∑x/∑x²'
+	function linkchange(){
+		if(solver[0].selected){
+		if(sumpopm.style.display=="flex"){
+			xlink.innerHTML="Use ∑x and n?"
+			hidework(valpopmv)
+		}else if(sumpopm.style.display!="flex"){
+			hidework(sumpopm)
+		}
+		}else if(solver[1].selected){
+			if(sumpopv.style.display=="flex"){
+			xlink.innerHTML="Use ∑x ∑x² and n?"
+			hidework(valpopmv)}
+			else if(sumpopv.style.display!="flex"){
+			hidework(sumpopv)
+		}
+		}
+	}
+
+	//Function To Change From 'S.D To Variance'
+	function pvtch(title,sub){
+		if(title.innerHTML=="Population Variance (σ²): "){
+			title.innerHTML="Standard Deviation (σ): "
+			sub.innerHTML="Use σ²"
+		}else if(title.innerHTML=="Standard Deviation (σ): "){
+			title.innerHTML="Population Variance (σ²): "
+			sub.innerHTML="Use σ"
+		}
+	}
+	
+	//Function To Toggle Width
+	function cflch(){
+		if(wilink.innerHTML=="Calculate width of interval?"){
+			wilink.innerHTML="Calculate confidence interval?"
+			pmm.style.display = "none"
+		}else if(wilink.innerHTML=="Calculate confidence interval?"){
+			wilink.innerHTML="Calculate width of interval?"
+			pmm.style.display = "flex"
+		}
+	}
+	
+	//Function To Toggle Width Again
+	function cflchi(){
+		if(wiilink.innerHTML=="Use width of interval?"){
+			wiilink.innerHTML="Use confidence interval?"
+			conflvls.style.display = "none"
+			widths.style.display ="flex"
+		}else if(wiilink.innerHTML=="Use confidence interval?"){
+			wiilink.innerHTML="Use width of interval?"
+			conflvls.style.display = "flex"
+			widths.style.display ="none"
+		}
+	}
+	</script>
+</body>
+</html>
